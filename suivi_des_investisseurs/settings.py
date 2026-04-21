@@ -94,8 +94,7 @@ WSGI_APPLICATION = 'suivi_des_investisseurs.wsgi.application'
 DATABASES = {
 
     "default": dj_database_url.config(
-        default=os.environ.get(
-            "postgresql://postuser:0EhkAGHtYEfRlE07R7NLyKzKDa22BpBZ@dpg-d7k0d4i8qa3s7397vg0g-a/suivisdesinvestisseurdb"),
+        default=os.environ.get("DATABASE_URL"),
         conn_max_age=600,
         ssl_require=True,
     )
