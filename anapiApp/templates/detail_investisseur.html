@@ -1,0 +1,68 @@
+{% extends '_base.html' %}
+
+{% load custom_filters %}
+
+{% block content %}
+
+<div class="flex justify-between mb-8">
+  <div class="text-lg">
+    <h3 class="font-bold"> {{ investisseur.1 }}</h3>
+    <h3>{{ investisseur.2 }} | {{ investisseur.3 }}</h3>
+
+    <address class="text-sm text-gray-500">
+        <h3> <a href="mailto:{{ investisseur.4 }}">{{ investisseur.4 }}</a> | <a href="tel:{{ investisseur.5 }}">{{ investisseur.5 }}</a></h3>
+    </address>
+    
+    <a href="{{ investisseur.6 }}" target="_blank" class="text-blue-500 text-sm hover:underline">{{ investisseur.6 }}</a>
+    <h3>{{ investisseur.7 }}, {{ investisseur.8 }}, {{ investisseur.9 }}</h3>
+  </div>
+
+  <div>
+    <a href="{% url 'new_investissement' investisseur.0|uuid_lower %}"
+      class="bg-jaune text-black px-4 py-2 rounded-md hover:bg-bleu-clair transition-colors shadow-md"
+    >
+      Ajouter un Investissement
+    </a>
+  </div>
+</div>
+
+<div class="overflow-x-auto rounded-lg shadow-md">
+  <table class=" bg-white ">
+    <thead>
+      <tr class="bg-bleu text-white">
+        <th class="py-2 px-4 text-left text-nowrap">Date</th>
+        <th class="py-2 px-4 pr-60 text-left text-nowrap">Objet</th>
+        <th class="py-2 px-4 text-left text-nowrap">Secteur</th>
+        <th class="py-2 px-4 text-left text-nowrap">Statut</th>
+        <th class="py-2 px-4 text-left text-nowrap">Source</th>
+        <th class="py-2 px-4 text-left text-nowrap">Derniere Interaction</th>
+        <th class="py-2 px-4 text-left text-nowrap">Prochaine etape</th>
+        <th class="py-2 px-4 pr-24 text-left text-nowrap">Commentaire</th>
+        <th class="py-2 px-4 text-left text-nowrap">Taux de progrssion</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {% for item in investissements %}
+          
+        <tr data-url="{% url "update_investissement" investisseur_id=investisseur.0|uuid_lower invest_id=item.0|uuid_lower %}" class="row-click border-t hover:bg-gray-100 cursor-pointer">
+          
+          <td class="py-2 px-4 text-nowrap align-top">{{ item.1 }}</td>
+          <td class="py-2 px-4">{{ item.2 }}</td>
+          <td class="py-2 px-4 text-nowrap align-top">{{ item.3 }}</td>
+          <td class="py-2 px-4 text-nowrap align-top">{{ item.4 }}</td>
+          <td class="py-2 px-4 text-nowrap align-top">{{ item.5 }}</td>
+          <td class="py-2 px-4 text-nowrap align-top">{{ item.6 }}</td>
+          <td class="py-2 px-4 text-nowrap align-top">{{ item.7 }}</td>
+          <td class="py-2 px-4 text-nowrap align-top">{{ item.8 }}</td>
+          <td class="py-2 px-4 text-nowrap align-top"><progress id="file" value="{{ item.9 }}" max="100"></progress></td>
+        </tr>
+          
+      {% endfor %}
+      <!-- Ajouter d'autres lignes d'investisseurs ici -->
+    </tbody>
+
+  </table>
+</div>
+
+{% endblock content %}

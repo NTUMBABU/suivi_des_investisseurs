@@ -1,0 +1,48 @@
+{% load compress %}
+
+{% load static %}
+
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="theme-color" content="#0A4FA3">
+    <meta name="csrf-token" content="{{ csrf_token }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ANAPI - SUIVI DES INVESTISSEURS</title>
+    {% compress css %}
+    <link rel="stylesheet" href="{% static 'src/output.css' %}"  />
+    {% endcompress %}
+    <link rel="icon" type="image/png" href="{% static "image/logo.png" %}"/>
+    <link rel="manifest" href="{% static "pwa/manifest.json" %}" />
+  </head>
+  <script>
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("/service-worker.js")
+        .then(reg => console.log("Service Worker enregistré", reg))
+        .catch(err => console.error("Erreur SW", err));
+    }
+  </script>
+  <body>
+    <div
+      class="flex justify-between items-center mb-5 py-1 px-20 bg-bleu border-b-2 border-bleu-clair"
+    >
+
+      <div>
+        <a href="{% url 'home' %}" class="text-white underline">Accueil</a>
+      </div>
+
+      <div class="flex gap-4">
+        <p class="text-gray-400 cursor-not-allowed underline"> Activiter </p>
+        <a href="{% url 'deconnexion' %}" class="text-white cursor-pointer underline"> Déconnexion </a>
+      </div>
+      
+    </div>
+
+    <div class="relative container mx-auto p-4 ">
+      {% block content %} {% endblock content %}
+    </div>
+  </body>
+  <script type="module" src="{% static 'js/jquery.min.js' %}"></script>
+  <script type="module" src="{% static 'js/main.js' %}"></script>
+</html>

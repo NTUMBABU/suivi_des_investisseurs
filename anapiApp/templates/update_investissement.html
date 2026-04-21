@@ -1,0 +1,121 @@
+{% extends '_base.html' %} 
+
+{% load custom_filters %}
+
+{% block content %}
+
+{% if messages %}
+  {% for message in messages %}
+    <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">
+      {{ message }}
+    </div>
+  {% endfor %}
+{% endif %}
+
+<form method="POST" action="{% url "update_investissement" investisseur_id=investisseur invest_id=investissement.0|uuid_lower %}">
+    {% csrf_token %}
+    <div class="flex justify-between mb-8">
+    <div class="text-lg">
+        <h3 class="text-2xl  font-light mb-4">Mettre à jour l'investissement pour <span class="font-bold"></span></h3>
+    </div>
+
+    <div>
+        <button type="submit"
+        class="bg-vert text-white px-4 py-1 rounded-md hover:bg-bleu-clair transition-colors shadow-md flex gap-2"
+        >
+
+        Valider 
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="white">
+            <path d="M9.9997 15.1709L19.1921 5.97852L20.6063 7.39273L9.9997 17.9993L3.63574 11.6354L5.04996 10.2212L9.9997 15.1709Z"></path>
+        </svg>
+
+        </button>
+    </div>
+    </div>
+
+    <hr class="mb-8 bg-gray-300">
+
+    <div>
+
+        <div class=" rounded-lg p-8 mb-4 w-2/3 mx-auto">
+
+            <div class="border border-gray-500 border-t-8 border-t-jaune  rounded-lg p-8 mb-4 ">
+                <label for="" class="block mb-2 font-medium text-xl">Information en rapport avec l'investissement</label>
+            </div>
+
+            <div class="border border-gray-500 rounded-lg p-8 mb-4">
+                <label for="" class="block mb-2 font-medium text-xl">Date <span class="text-red-500">*</span></label>
+                <input type="date" value="{{ investissement.1|date:'Y-m-d' }}" name="date_de_demande" placeholder="Entrez l'événement" class="w-full py-2 border-b-[1px] border-gray-300 focus:outline-none focus:border-b-2 focus:border-blue-500">
+            </div>
+
+            <div class="border border-gray-500 rounded-lg p-8 mb-4 ">
+                <label for="" class="block mb-2 font-medium text-xl">Objet <span class="text-red-500">*</span></label>
+                <textarea name="objet" rows="6" cols="50" placeholder="Objet de l'investissement ..." value="" class="w-full py-2 px-2 border-[1px] border-gray-300 focus:outline-none focus:border-b-2 focus:border-blue-500">{{ investissement.2 }}</textarea>
+            </div>
+
+            <div class="border border-gray-500 rounded-lg p-8 mb-4 ">
+                <label for="" class="block mb-2 font-medium text-xl">Secteur <span class="text-red-500">*</span></label>
+                <input type="text" id="secteur" name="secteur" placeholder="Entrez le secteur" value="{{ investissement.3 }}" class="w-full py-2 border-b-[1px] border-gray-300 focus:outline-none focus:border-b-2 focus:border-blue-500">
+            </div>
+
+            <div class="border border-gray-500 border-t-8 border-t-bleu-clair  rounded-lg p-8 mb-4 ">
+                <label for="" class="block mb-2 font-medium text-xl">Suivi des relations</label>
+            </div>
+
+            <div class="border border-gray-500 rounded-lg p-8 mb-4 ">
+                <label for="" class="block mb-2 font-medium text-xl">Status</label>
+                <select name="statut" class="w-full py-2 border-b-[1px] border-gray-300 focus:outline-none focus:border-b-2 focus:border-blue-500 mt-4">
+                    <option value="En cours" {% if investissement.4 == "En cours" %}selected{% endif %}>En cours</option>
+                    <option value="Terminé" {% if investissement.4 == "Terminé" %}selected{% endif %}>Terminé</option>
+                    <option value="En attente" {% if investissement.4 == "En attente" %}selected{% endif %}>En attente</option>
+                </select>
+            </div>
+
+            <div class="border border-gray-500 rounded-lg p-8 mb-4 ">
+                <label for="" class="block mb-2 font-medium text-xl">Source</label>
+                <input type="text" id="source" name="source" placeholder="Entrez la source" value="{{ investissement.5 }}" class="w-full py-2 border-b-[1px] border-gray-300 focus:outline-none focus:border-b-2 focus:border-blue-500">
+            </div>
+
+            <div class="border border-gray-500 rounded-lg p-8 mb-4 ">
+                <h3 for="evenement" class="block mb-8 font-medium text-xl">Date de suivi d'investissement</h3>
+
+                <label for="" class="block font-light text-lg">Dernière interaction :</label>
+                <input type="date" value="{{ investissement.6|date:'Y-m-d' }}" name="derniere_interaction" placeholder="Entrez l'événement" class="w-full py-2 border-b-[1px] border-gray-300 focus:outline-none focus:border-b-2 focus:border-blue-500 mb-8">
+                <label for="" class="block font-light text-lg">Prochaine étape :</label>
+                <input type="date" value="{{ investissement.7|date:'Y-m-d' }}" name="prochaine_etape" placeholder="Entrez l'événement" class="w-full py-2 border-b-[1px] border-gray-300 focus:outline-none focus:border-b-2 focus:border-blue-500">
+            </div>
+
+            <div class="border border-gray-500 border-t-8 border-t-vert  rounded-lg p-8 mb-4 ">
+                <label for="" class="block mb-2 font-medium text-xl">Indicateurs Clés (KPI) pour le reporting financier <span class="text-red-500">(Une fois l'investissement réalisé)</span></label>
+            </div>
+
+            <div class="border border-gray-500 rounded-lg p-8 mb-4 ">
+                <label for="" class="block mb-2 font-medium text-xl">Commentaire</label>
+                <textarea name="commentair" rows="6" cols="50" placeholder="Commentaire ..." class="w-full py-2 px-2 border-[1px] border-gray-300 focus:outline-none focus:border-b-2 focus:border-blue-500">{{ investissement.8 }}</textarea>
+            </div>
+
+            <div class="border border-gray-500 rounded-lg p-8 mb-4 ">
+                
+                <label for="taux" class="block mb-2 font-medium text-xl">Taux de progression en(%) </label>
+                <input type="number" list="taux" id="" name="taux" placeholder="Entrez le taux de progression" value="{{ investissement.9 }}" class="w-full py-2 border-b-[1px] border-gray-300 focus:outline-none focus:border-b-2 focus:border-blue-500"/>
+                <!-- Liste de suggestions -->
+                <datalist id="taux">
+                    <option value="10">
+                    <option value="20">
+                    <option value="30">
+                    <option value="40">
+                    <option value="50">
+                    <option value="60">
+                    <option value="70">
+                    <option value="80">
+                    <option value="90">
+                    <option value="100">
+                </datalist>
+            </div>
+
+        </div>
+
+    </div>
+</form>
+
+{% endblock content %}

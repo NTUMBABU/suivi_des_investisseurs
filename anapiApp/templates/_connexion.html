@@ -1,0 +1,23 @@
+{% load compress %} {% load static %}
+
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="csrf-token" content="{{ csrf_token }}">
+    <title>ANAPI - SUIVI DES INVESTISSEURS</title>
+    {% compress css %}
+    <link rel="stylesheet" href="{% static 'src/output.css' %}"  />
+    {% endcompress %}
+    <link rel="icon" type="image/png" href="{% static "image/logo.png" %}"/>
+  </head>
+  <body>
+
+    <div class="relative container mx-auto my-auto p-4">
+      {% block content %} {% endblock content %}
+    </div>
+
+  </body>
+  <script type="module" src="{% static 'js/jquery.min.js' %}"></script>
+  <script type="module" src="{% static 'js/main.js' %}"></script>
+</html>

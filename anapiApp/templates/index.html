@@ -1,0 +1,199 @@
+{% extends '_base.html' %}
+
+{% load custom_filters %}
+
+{% load static %}
+{% load i18n %}
+
+{% block content %}
+
+{% if messages %}
+  {% for message in messages %}
+    <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">
+      {{ message }}
+    </div>
+  {% endfor %}
+{% endif %}
+
+<div class="flex justify-between items-center">
+    <div>
+        <h1 class="text-2xl  font-light mb-4">Liste des Investisseurs</h1>
+        <p class="text-gray-600 text-xs font-mono"> Total : {{ indicateurs|length }} investisseur(s)</p>
+    </div>
+
+    <div>
+        <img src="{% static "image/logo-off.svg" %}" height="" width="280" alt="logo anapi"/>
+    </div>
+    
+    <div>
+        <a href="{% url 'new_investisseur' %}" class="bg-jaune text-black px-4 py-2 rounded-md hover:bg-bleu-clair transition-colors shadow-md">
+            Ajouter un Investisseur
+        </a>
+
+        <a href="{% url 'export_excel' %}" class="bg-vert text-white px-4 py-2 rounded-md ml-3 hover:bg-bleu-clair transition-colors">
+            Exporter en Excel
+        </a>
+    </div>
+</div>
+
+<div class="bg-[#035089] border-t-2 border-bleu-clair mb-6 mt-4 h-24 flex justify-center items-center ">
+
+    <div>
+        <select id="filterType" name="statut" class="bg-bleu-clair text-white p-[8.5px] border border-r-0 border-white focus:outline-none ">
+            <option value="name" selected>Nom de l'investisseur</option>
+            <option value="company">Société</option>
+            <option value="fonction">Fonction</option>
+            <option value="event">Evenement</option>
+        </select>
+
+        <input
+            type="text"
+            id="champ_filtre"
+            placeholder="Filtrer..."
+            class="bg-transparent p-2 border border-r-0 border-l-0 border-white text-gray-300 px-4 focus:outline-none"
+        />
+        <button class="bg-transparent border border-l-0 border-white p-2 flex items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="white">
+                <path d="M10 14L4 5V3H20V5L14 14V20L10 22V14Z"></path>
+            </svg>
+        </button>
+    </div>
+    
+
+    <div class="">
+        <button id="event-filter-btn" class="bg-transparent ml-4 h2 py-2 px-2 border border-white cursor-pointer flex gap-2 focus:outline-1 focus:outline-bleu-clair">
+            <p class="text-base text-gray-300">Liste des événements </p>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="white">
+                <path d="M11.9999 13.1714L16.9497 8.22168L18.3639 9.63589L11.9999 15.9999L5.63599 9.63589L7.0502 8.22168L11.9999 13.1714Z"></path>
+            </svg>
+        </button>
+
+        <div id="event-filter-menu" class="hidden absolute mt-2 bg-white z-50 border rounded-md shadow-xl p-4 ">
+
+            <ul>
+                {% for item in event %}
+                    <li>{{ item.1 }}</li>
+                    <!--<input type="checkbox" id="{{ item.1|slugify }}" name="{{ item.1|slugify }}">-->
+                    <!--<label for="{{ item.1|slugify }}">{{ item.1 }}</label><br>-->
+                {% endfor %}
+            </ul>
+            
+            <button popovertarget="pop" popovertargetaction="show" class="bg-vert text-white px-2 py-1 rounded-md hover:bg-bleu-clair transition-colors shadow-md mt-4 flex gap-2 cursor-pointer">
+                <p>Ajouter un événement</p>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+                    <path d="M11 11V5H13V11H19V13H13V19H11V13H5V11H11Z"></path>
+                </svg>
+            </button>
+
+        </div>
+    </div>
+    
+
+</div>
+
+<!-- pop over ici -->
+
+<div id='pop' popover="manual" class="fixed w-screen h-screen bg-black/30 backdrop-blur-sm z-40 ">
+    <div class="relative bg-white border border-gray-500 border-t-8 border-t-bleu-clair  rounded-lg p-8 w-2/3 mx-auto my-40 z-50">
+        
+        <button popovertarget="pop" popovertargetaction="hidden" class="bg-red-600 text-white px-4 py-1 mb-4 rounded-xl cursor-pointer absolute right-5 top-2">Fermer</button>
+        
+        <label for="evenement" class="block mb-2 font-medium text-xl">Ajouter un evenement :</label>
+        <input type="text" id="nom_event" maxlength="24" placeholder="Entrez le nom de l'evenement" class="w-full py-2 border-b-[1px] border-gray-300 focus:outline-none focus:border-b-2 focus:border-blue-500">
+        
+        <span class="error text-red-600 text-sm flex gap-2 mt-4 hidden">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="rgba(228,18,18,1)"><path d="M12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22ZM12 20C16.4183 20 20 16.4183 20 12C20 7.58172 16.4183 4 12 4C7.58172 4 4 7.58172 4 12C4 16.4183 7.58172 20 12 20ZM11 15H13V17H11V15ZM11 7H13V13H11V7Z"></path></svg>
+                    Il est obligatoire de mettre un nom</span>
+        <p class="text-gray-600 text-xs font-mono mt-2"> Maximum 24 caractères</p>
+        <button id="addEvenementBtn"
+            class="bg-vert text-white px-4 py-1 mt-4 rounded-md hover:bg-bleu-clair transition-colors shadow-md flex gap-2"
+        >
+            Ajouter
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+                <path d="M11 11V5H13V11H19V13H13V19H11V13H5V11H11Z"></path>
+            </svg>
+        </button>
+    </div>
+</div>
+
+<!-- liste des investisseurs -->
+
+<div class="grid grid-cols-4 gap-2 max-sm:grid-cols-2 ">
+
+    {% for item in indicateurs %}
+
+        <div class='indicator-card relative rounded-lg shadow-lg p-4 mb-4 w-fit border border-gray-500 border-b-8 flex  cursor-pointer hover:border-b-0' style="border-bottom-color: {{ item.4 }};" data-name="{{ item.1|lower }}" data-company="{{ item.2|lower }}" data-fonction="{{ item.3|lower }}" data-event="{{ item.5|lower }}">
+
+            <a href="{% url 'detail_investisseur' investisseur_id=item.0|uuid_lower %}">
+                <div class="mr-4">
+                    <div class="truncate w-52">
+                        <h1 class="text-lg font-bold">{{ item.1 }}</h1>
+                        <h2 class="text-md font-semibold">{{ item.2 }} | {{ item.3 }}</h2>
+                        <h2 class="text-md font-semibold">{{ item.8 }}</h2>
+                        <h3 class="text-sm font-light text-gray-600">Evenement : {{ item.5 }}</h3>
+                    </div>
+                    <div class="mt-4">
+                        <h4 class="underline text-xs text-gray-500">cree par : {{ item.6 }} {{ item.7 }}</h4>
+                    </div>
+                </div>
+            </a>
+            
+            <button data-id="{{ item.0 }}" data-name="{{ item.1 }}" class="option-btn hover:bg-gray-200 rounded-sm p-1 h-fit focus:border-[1px] focus:border-blue-400">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+                    <path d="M12 3C11.175 3 10.5 3.675 10.5 4.5C10.5 5.325 11.175 6 12 6C12.825 6 13.5 5.325 13.5 4.5C13.5 3.675 12.825 3 12 3ZM12 18C11.175 18 10.5 18.675 10.5 19.5C10.5 20.325 11.175 21 12 21C12.825 21 13.5 20.325 13.5 19.5C13.5 18.675 12.825 18 12 18ZM12 10.5C11.175 10.5 10.5 11.175 10.5 12C10.5 12.825 11.175 13.5 12 13.5C12.825 13.5 13.5 12.825 13.5 12C13.5 11.175 12.825 10.5 12 10.5Z"></path>
+                </svg>
+            </button>
+            
+            <div class="options-menu hidden absolute right-9 top-13 bg-white border border-gray-300 shadow-xl z-50">
+                <div data-url="{% url "update_investisseur" investisseurUP_id=item.0|uuid_lower  %}" class="row-click flex gap-2 p-2 hover:bg-gray-300">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="blue"><path d="M12.8995 6.85453L17.1421 11.0972L7.24264 20.9967H3V16.754L12.8995 6.85453ZM14.3137 5.44032L16.435 3.319C16.8256 2.92848 17.4587 2.92848 17.8492 3.319L20.6777 6.14743C21.0682 6.53795 21.0682 7.17112 20.6777 7.56164L18.5563 9.68296L14.3137 5.44032Z"></path></svg>
+                    <p class="text-sm font-serif font-light">Modifie</p>
+                </div>
+
+                <button popovertarget="delete" popovertargetaction="show" class="delete-btn flex gap-2 p-2 hover:bg-gray-300">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="red"><path d="M4 8H20V21C20 21.5523 19.5523 22 19 22H5C4.44772 22 4 21.5523 4 21V8ZM7 5V3C7 2.44772 7.44772 2 8 2H16C16.5523 2 17 2.44772 17 3V5H22V7H2V5H7ZM9 4V5H15V4H9ZM9 12V18H11V12H9ZM13 12V18H15V12H13Z"></path></svg>
+                    <p class="text-sm font-serif font-light">Supprimer</p>
+                </button>
+                
+            </div>
+            
+        </div>
+
+        
+
+    {% endfor %}
+
+    <!-- POP ICI -->
+
+    <div id='delete' popover="manual" class="fixed w-full h-lvh bg-black/30 backdrop-blur-sm z-40 ">
+
+        <div class="relative bg-white border border-gray-500 border-t-8 border-t-red-600  rounded-lg p-8 w-2/3 mx-auto my-40 z-50">
+
+            <div>
+                <h3 class="block mb-2 font-medium text-xl">Voulez vous vraiment supprimer </h3>
+                <p id="popoverItemName" class="font-semibold text-gray-800 mb-3"></p>
+            </div>
+            
+            <div>
+                <button popovertarget="delete" popovertargetaction="hidden" class="bg-vert text-white px-4 py-1 rounded-md cursor-pointer hover:bg-bleu-clair transition-colors ">
+                Annuler
+                </button>
+                <button id="delete_element" popovertarget="delete" popovertargetaction="hidden" class="bg-red-600 text-white px-4 py-1 rounded-md cursor-pointer hover:bg-bleu-clair transition-colors">
+                Supprimer
+                </button>
+            </div>
+            
+        </div>
+
+    </div>
+
+</div>
+
+    
+
+
+
+
+
+
+{% endblock content %}

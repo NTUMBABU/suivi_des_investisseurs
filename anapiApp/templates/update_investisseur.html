@@ -1,0 +1,132 @@
+{% extends '_base.html' %}
+
+{% load custom_filters %}
+
+{% block content %}
+
+{% if messages %}
+  {% for message in messages %}
+    <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">
+      {{ message }}
+    </div>
+  {% endfor %}
+{% endif %}
+
+<form method="post" action="{% url 'update_investisseur' investisseurUP_id=id_invest %}">
+  {% csrf_token %}
+
+    <div class="flex justify-between mb-8">
+        <div class="text-lg">
+            <h3 class="text-2xl  font-light mb-4">Modifier l'investisseur <span class="font-bold">{{ investisseur.1 }}<span></h3>
+            
+        </div>
+
+        <div>
+            <button type="submit"
+            class="bg-vert text-white px-4 py-1 rounded-md hover:bg-bleu-clair transition-colors shadow-md flex gap-2"
+            >
+            Valider
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+                <path d="M11 11V5H13V11H19V13H13V19H11V13H5V11H11Z"></path>
+            </svg>
+            </button>
+        </div>
+    </div>
+
+    <hr class="mb-8 bg-gray-300">
+
+    <div>
+
+        <div class=" rounded-lg p-8 mb-4 w-2/3 mx-auto">
+
+            <div></div>
+
+            <div class="border border-gray-500 border-t-8 border-t-[#035089] rounded-lg p-8 mb-4 ">
+                
+                <label for="" class="block mb-2 font-medium text-xl">Sélectionner l'événement</label>
+                <select name="evenement" class="w-full py-2 border-b-[1px] border-gray-300 focus:outline-none focus:border-b-2 focus:border-blue-500 mt-4">
+                    <option disabled selected>{{un_event.1}}</option>
+                    {% for item in event %}
+                        <option value="{{ item.0 }}">{{item.1}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="border border-gray-500 border-t-8 border-t-jaune  rounded-lg p-8 mb-4 ">
+                <label for="" class="block mb-2 font-medium text-xl">Identification de l'investisseur</label>
+            </div>
+
+            <div class="border border-gray-500 rounded-lg p-8 mb-4 ">
+                <label for="" class="block mb-2 font-medium text-xl">Société/ Structure </label>
+                <input type="text" id="" name="nom_entreprise" value="{{ investisseur.3 }}" placeholder="Entrez le nom de l'entreprise" class="w-full py-2 border-b-[1px] border-gray-300 focus:outline-none focus:border-b-2 focus:border-blue-500">
+            </div>
+
+            {% comment %} <div class="border border-gray-500 rounded-lg p-8 mb-4 ">
+                <label for="" class="block mb-2 font-medium text-xl">Personalité juridique <span class="text-red-500">*</span></label>
+                <select name="personalite_juridique" class="w-full py-2 border-b-[1px] border-gray-300 focus:outline-none focus:border-b-2 focus:border-blue-500 mt-4">
+                    <option value="Aucune">Sélectionnez une personalité juridique</option>
+                    <option value="Personne physique">Personne physique</option>
+                    <option value="Personne morale">Personne morale</option>
+                </select>
+            </div> {% endcomment %}
+
+            <div class="border border-gray-500 rounded-lg p-8 mb-4 ">
+                <label for="" class="block mb-2 font-medium text-xl">Nom complet <span class="text-red-500">*</span></label>
+                <input type="text" id="" name="identite_investisseur" value="{{ investisseur.1 }}" placeholder="Entrez le nom complet de l'investisseur" class="w-full py-2 border-b-[1px] border-gray-300 focus:outline-none focus:border-b-2 focus:border-blue-500">
+            </div>
+
+            <div class="border border-gray-500 rounded-lg p-8 mb-4 ">
+                <label for="" class="block mb-2 font-medium text-xl">Qualification <span class="text-red-500">*</span> </label>
+                <input type="text" id="" name="qualification" value="{{ investisseur.2 }}" placeholder="Entrez la qualification de l'investisseur" class="w-full py-2 border-b-[1px] border-gray-300 focus:outline-none focus:border-b-2 focus:border-blue-500">
+            </div>
+
+            <div class="border border-gray-500 border-t-8 border-t-bleu-clair  rounded-lg p-8 mb-4 ">
+                <label for="" class="block mb-2 font-medium text-xl">Contact de l'investisseur</label>
+            </div>
+
+            <div class="border border-gray-500 rounded-lg p-8 mb-4 ">
+                <label for="email" class="block mb-2 font-medium text-xl">Adresse e-mail<span class="text-red-500">*</span> </label>
+                <input type="email" id="email" name="email" value="{{ investisseur.4 }}" placeholder="Entrez l'adresse e-mail de l'investisseur" class="w-full py-2 border-b-[1px] border-gray-300 focus:outline-none focus:border-b-2 focus:border-blue-500">
+            </div>
+
+            <div class="border border-gray-500 rounded-lg p-8 mb-4 ">
+                <label for="" class="block mb-2 font-medium text-xl">Numero de téléphone <span class="text-red-500">*</span></label>
+                <input type="number" id="" name="telephone" value="{{ investisseur.5 }}" placeholder="Entrez le numero de téléphone" class="w-full py-2 border-b-[1px] border-gray-300 focus:outline-none focus:border-b-2 focus:border-blue-500">
+            </div>
+
+            <div class="border border-gray-500 rounded-lg p-8 mb-4 ">
+                <label for="" class="block mb-2 font-medium text-xl">Site web </label>
+                <input type="url" id="" name="site_web" value="https://{{ investisseur.6 }}" placeholder="Entrez le site web de l'investisseur" class="w-full py-2 border-b-[1px] border-gray-300 focus:outline-none focus:border-b-2 focus:border-blue-500">
+            </div>
+
+            <div class="border border-gray-500 border-t-8 border-t-vert  rounded-lg p-8 mb-4 ">
+                <label for="" class="block mb-2 font-medium text-xl">Addresse de l'investisseur</label>
+            </div>
+
+            <div class="border border-gray-500 rounded-lg p-8 mb-4 ">
+                <label for="" class="block mb-2 font-medium text-xl">Pays <span class="text-red-500">*</span> </label>
+                <input type="text" id="" name="pays" value="{{ investisseur.7 }}" placeholder="Entrez le pays" class="w-full py-2 border-b-[1px] border-gray-300 focus:outline-none focus:border-b-2 focus:border-blue-500">
+            </div>
+
+            <div class="border border-gray-500 rounded-lg p-8 mb-4 ">
+                <label for="" class="block mb-2 font-medium text-xl">Adresse complète <span class="text-red-500">*</span> </label>
+                <input type="text" id="" name="adresse_entreprise" value="{{ investisseur.8 }}" placeholder="Entrez l'adresse complète de l'investisseur" class="w-full py-2 border-b-[1px] border-gray-300 focus:outline-none focus:border-b-2 focus:border-blue-500">
+            </div>
+
+            <div class="border border-gray-500 rounded-lg p-8 mb-4 ">
+                <label for="" class="block mb-2 font-medium text-xl">Code postal </label>
+                <input type="number" id="" name="boite_postal" value="{{ investisseur.9 }}" placeholder="Entrez le code postal" class="w-full py-2 border-b-[1px] border-gray-300 focus:outline-none focus:border-b-2 focus:border-blue-500">
+            </div>
+
+            <div class="border border-gray-500 border-t-8 border-t-red-600  rounded-lg p-8 mb-4 ">
+                <label for="color" class="block mb-2 font-medium text-xl">Sélectionner une Couleur <span class="text-gray-500 text-sm">(Optionnel)</span> </label>
+                <input type="color" id="color" name="couleur" value="{{ investisseur.10 }}" colorspace="display-p3">
+            </div>
+
+        </div>
+
+    </div>
+
+</form>
+
+{% endblock content %}

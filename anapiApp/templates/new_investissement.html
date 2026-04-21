@@ -1,0 +1,123 @@
+{% extends '_base.html' %} 
+
+{% load custom_filters %}
+
+{% block content %}
+
+<form method="post" id="investissementForm" action="{% url 'new_investissement' invest_id|uuid_lower %}">
+    {% csrf_token %}
+    <div class="flex justify-between mb-8">
+    <div class="text-lg">
+        <h3 class="text-2xl  font-light mb-4">Ajouter un investissement pour <span class="font-bold">{{ investisseur.1 }}</span></h3>
+    </div>
+
+    <div>
+        <button
+        class="bg-vert text-white px-4 py-1 rounded-md hover:bg-bleu-clair transition-colors shadow-md flex gap-2"
+        >
+
+        Valider 
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="white">
+            <path d="M9.9997 15.1709L19.1921 5.97852L20.6063 7.39273L9.9997 17.9993L3.63574 11.6354L5.04996 10.2212L9.9997 15.1709Z"></path>
+        </svg>
+
+        </button>
+    </div>
+    </div>
+
+    <hr class="mb-8 bg-gray-300">
+
+    <div>
+
+        <div class=" rounded-lg p-8 mb-4 w-2/3 mx-auto">
+
+            <div class="border border-gray-500 border-t-8 border-t-jaune  rounded-lg p-8 mb-4 ">
+                <label for="" class="block mb-2 font-medium text-xl">Information en rapport avec l'investissement</label>
+            </div>
+
+            <div class="border border-gray-500 rounded-lg p-8 mb-4">
+                <label for="" class="block mb-2 font-medium text-xl">Date <span class="text-red-500">*</span></label>
+                <input type="date" value="{{ dateActual }}" name="date_de_demande" placeholder="Entrez l'événement" class="w-full py-2 border-b-[1px] border-gray-300 focus:outline-none focus:border-b-2 focus:border-blue-500">
+            </div>
+
+            <div id="bordureIvss1" class="border border-gray-500 rounded-lg p-8 mb-4 ">
+                <label for="" class="block mb-2 font-medium text-xl">Objet <span class="text-red-500">*</span></label>
+                <textarea name="objet" id="objet" rows="6" cols="50" placeholder="Objet de l'investissement ..." class="w-full py-2 px-2 border-[1px] border-gray-300 focus:outline-none focus:border-b-2 focus:border-blue-500"></textarea>
+                <span class="error text-red-600 text-sm flex gap-2 mt-4 hidden">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="rgba(228,18,18,1)"><path d="M12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22ZM12 20C16.4183 20 20 16.4183 20 12C20 7.58172 16.4183 4 12 4C7.58172 4 4 7.58172 4 12C4 16.4183 7.58172 20 12 20ZM11 15H13V17H11V15ZM11 7H13V13H11V7Z"></path></svg>
+                    L'objet est obligatoire</span>
+            </div>
+
+            <div id="bordureIvss2" class="border border-gray-500 rounded-lg p-8 mb-4 ">
+                <label for="" class="block mb-2 font-medium text-xl">Secteur <span class="text-red-500">*</span></label>
+                <input type="text" id="secteur" name="secteur" placeholder="Entrez le secteur" class="w-full py-2 border-b-[1px] border-gray-300 focus:outline-none focus:border-b-2 focus:border-blue-500">
+                <span class="error text-red-600 text-sm flex gap-2 mt-4 hidden">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="rgba(228,18,18,1)"><path d="M12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22ZM12 20C16.4183 20 20 16.4183 20 12C20 7.58172 16.4183 4 12 4C7.58172 4 4 7.58172 4 12C4 16.4183 7.58172 20 12 20ZM11 15H13V17H11V15ZM11 7H13V13H11V7Z"></path></svg>
+                    Le secteur est obligatoire</span>
+            </div>
+
+            <div class="border border-gray-500 border-t-8 border-t-bleu-clair  rounded-lg p-8 mb-4 ">
+                <label for="" class="block mb-2 font-medium text-xl">Suivi des relations</label>
+            </div>
+
+            <div id="bordureIvss3" class="border border-gray-500 rounded-lg p-8 mb-4 ">
+                <label for="" class="block mb-2 font-medium text-xl">Status <span class="text-red-500">*</span></label>
+                <select name="statut" id="statut" class="w-full py-2 border-b-[1px] border-gray-300 focus:outline-none focus:border-b-2 focus:border-blue-500 mt-4">
+                    <option value="" disabled selected>Sélectionnez un status</option>
+                    <option value="En cours">En cours</option>
+                    <option value="Terminé">Terminé</option>
+                    <option value="En attente">En attente</option>
+                </select>
+                <span class="error text-red-600 text-sm flex gap-2 mt-4 hidden">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="rgba(228,18,18,1)"><path d="M12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22ZM12 20C16.4183 20 20 16.4183 20 12C20 7.58172 16.4183 4 12 4C7.58172 4 4 7.58172 4 12C4 16.4183 7.58172 20 12 20ZM11 15H13V17H11V15ZM11 7H13V13H11V7Z"></path></svg>
+                    Le status est obligatoire</span>
+            </div>
+
+            <div class="border border-gray-500 rounded-lg p-8 mb-4 ">
+                <label for="" class="block mb-2 font-medium text-xl">Source</label>
+                <input type="text" id="source" name="source" placeholder="Entrez la source" class="w-full py-2 border-b-[1px] border-gray-300 focus:outline-none focus:border-b-2 focus:border-blue-500">
+            </div>
+
+            <div class="border border-gray-500 rounded-lg p-8 mb-4 ">
+                <h3 for="" class="block mb-8 font-medium text-xl">Date de suivi d'investissement</h3>
+
+                <label for="" class="block font-light text-lg">Dernière interaction :</label>
+                <input type="date" value="{{ dateActual }}" name="derniere_interaction" placeholder="Entrez l'événement" class="w-full py-2 border-b-[1px] border-gray-300 focus:outline-none focus:border-b-2 focus:border-blue-500 mb-8">
+                <label for="" class="block font-light text-lg">Prochaine étape :</label>
+                <input type="date" value="{{ dateActual }}" name="prochaine_etape" placeholder="Entrez l'événement" class="w-full py-2 border-b-[1px] border-gray-300 focus:outline-none focus:border-b-2 focus:border-blue-500">
+            </div>
+
+            <div class="border border-gray-500 border-t-8 border-t-vert  rounded-lg p-8 mb-4 ">
+                <label for="" class="block mb-2 font-medium text-xl">Indicateurs Clés (KPI) pour le reporting financier <span class="text-red-500">(Une fois l'investissement réalisé)</span></label>
+            </div>
+
+            <div class="border border-gray-500 rounded-lg p-8 mb-4 ">
+                <label for="" class="block mb-2 font-medium text-xl">Commentaire</label>
+                <textarea name="commentair" rows="6" cols="50" placeholder="Commentaire ..." class="w-full py-2 px-2 border-[1px] border-gray-300 focus:outline-none focus:border-b-2 focus:border-blue-500"></textarea>
+            </div>
+
+            <div class="border border-gray-500 rounded-lg p-8 mb-4 ">
+                
+                <label for="taux" class="block mb-2 font-medium text-xl">Taux de progression en(%) </label>
+                <input type="number" list="taux" id="" name="taux" value="5" placeholder="Entrez le taux de progression" class="w-full py-2 border-b-[1px] border-gray-300 focus:outline-none focus:border-b-2 focus:border-blue-500"/>
+                <!-- Liste de suggestions -->
+                <datalist id="taux">
+                    <option value="10">
+                    <option value="20">
+                    <option value="30">
+                    <option value="40">
+                    <option value="50">
+                    <option value="60">
+                    <option value="70">
+                    <option value="80">
+                    <option value="90">
+                    <option value="100">
+                </datalist>
+            </div>
+
+        </div>
+
+    </div>
+</form>
+
+{% endblock content %}

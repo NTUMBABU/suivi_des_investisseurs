@@ -1,0 +1,12 @@
+/* static/src/input.css */
+/* pour executer tailwindcss -> */
+/*  npx @tailwindcss/cli -i ./anapiApp/static/src/input.css -o ./anapiApp/static/src/output.css --watch  */
+
+@import "tailwindcss";
+
+@theme{
+  --color-jaune: #FFBE03;
+  --color-vert: #107C41;
+  --color-bleu: #025D7E;
+  --color-bleu-clair: #00ADEE;
+}

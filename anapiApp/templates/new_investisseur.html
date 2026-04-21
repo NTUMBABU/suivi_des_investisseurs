@@ -1,0 +1,148 @@
+{% extends '_base.html' %} 
+
+{% block content %}
+
+{% if messages %}
+  {% for message in messages %}
+    <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">
+      {{ message }}
+    </div>
+  {% endfor %}
+{% endif %}
+
+<!---->
+<form method="post" id="investisseurForm" action="{% url 'new_investisseur' %}">
+  {% csrf_token %}
+
+    <div class="flex justify-between mb-8">
+        <div class="text-lg">
+            <h3 class="text-2xl  font-light mb-4">Ajouter un investisseur</h3>
+            
+        </div>
+
+        <div>
+            <button type="submit"
+            class="bg-vert text-white px-4 py-1 rounded-md hover:bg-bleu-clair transition-colors shadow-md flex gap-2"
+            >
+            Ajouter
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+                <path d="M11 11V5H13V11H19V13H13V19H11V13H5V11H11Z"></path>
+            </svg>
+            </button>
+        </div>
+    </div>
+
+    <hr class="mb-8 bg-gray-300">
+
+    <div>
+
+        <div class=" rounded-lg p-8 mb-4 w-2/3 mx-auto">
+
+            <div></div>
+
+            <div id="bordureIvt1" class="border border-gray-500 border-t-8 border-t-[#035089] rounded-lg p-8 mb-4 ">
+                <label for="" class="block mb-2 font-medium text-xl">Sélectionner l'événement</label>
+                <select name="evenement" id="evenement" class="w-full py-2 border-b-[1px] border-gray-300 focus:outline-none focus:border-b-2 focus:border-blue-500 mt-4">
+                    <option value="" disabled selected>Sélectionnez un événement</option>
+                    {% for item in event %}
+                        <option value="{{ item.0 }}">{{item.1}}</option>
+                    {% endfor %}
+                </select>
+                <span class="error text-red-600 text-sm flex gap-2 mt-4 hidden">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="rgba(228,18,18,1)"><path d="M12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22ZM12 20C16.4183 20 20 16.4183 20 12C20 7.58172 16.4183 4 12 4C7.58172 4 4 7.58172 4 12C4 16.4183 7.58172 20 12 20ZM11 15H13V17H11V15ZM11 7H13V13H11V7Z"></path></svg>
+                    Veuillez sélectionner une option</span>
+            </div>
+
+            <div class="border border-gray-500 border-t-8 border-t-jaune  rounded-lg p-8 mb-4 ">
+                <label for="evenement" class="block mb-2 font-medium text-xl">Identification de l'investisseur</label>
+            </div>
+
+            <div class="border border-gray-500 rounded-lg p-8 mb-4 ">
+                <label for="" class="block mb-2 font-medium text-xl">Société/ Structure </label>
+                <input type="text" id="" name="nom_entreprise" placeholder="Entrez le nom de l'entreprise" class="w-full py-2 border-b-[1px] border-gray-300 focus:outline-none focus:border-b-2 focus:border-blue-500">
+            </div>
+
+            {% comment %} <div class="border border-gray-500 rounded-lg p-8 mb-4 ">
+                <label for="" class="block mb-2 font-medium text-xl">Personalité juridique <span class="text-red-500">*</span></label>
+                <select name="personalite_juridique" class="w-full py-2 border-b-[1px] border-gray-300 focus:outline-none focus:border-b-2 focus:border-blue-500 mt-4">
+                    <option value="Aucune">Sélectionnez une personalité juridique</option>
+                    <option value="Personne physique">Personne physique</option>
+                    <option value="Personne morale">Personne morale</option>
+                </select>
+            </div> {% endcomment %}
+
+            <div id="bordureIvt2" class="border border-gray-500 rounded-lg p-8 mb-4 ">
+                <label for="" class="block mb-2 font-medium text-xl">Nom complet <span class="text-red-500">*</span></label>
+                <input type="text" id="nom_comp" name="identite_investisseur" placeholder="Entrez le nom complet de l'investisseur" class="w-full py-2 border-b-[1px] border-gray-300 focus:outline-none focus:border-b-2 focus:border-blue-500">
+                <span class="error text-red-600 text-sm flex gap-2 mt-4 hidden">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="rgba(228,18,18,1)"><path d="M12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22ZM12 20C16.4183 20 20 16.4183 20 12C20 7.58172 16.4183 4 12 4C7.58172 4 4 7.58172 4 12C4 16.4183 7.58172 20 12 20ZM11 15H13V17H11V15ZM11 7H13V13H11V7Z"></path></svg>
+                    Le nom est obligatoire</span>
+            </div>
+
+            <div id="bordureIvt3" class="border border-gray-500 rounded-lg p-8 mb-4 ">
+                <label for="" class="block mb-2 font-medium text-xl">Qualification <span class="text-red-500">*</span> </label>
+                <input type="text" id="qualif" name="qualification" placeholder="Entrez la qualification de l'investisseur" class="w-full py-2 border-b-[1px] border-gray-300 focus:outline-none focus:border-b-2 focus:border-blue-500">
+                <span class="error text-red-600 text-sm flex gap-2 mt-4 hidden">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="rgba(228,18,18,1)"><path d="M12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22ZM12 20C16.4183 20 20 16.4183 20 12C20 7.58172 16.4183 4 12 4C7.58172 4 4 7.58172 4 12C4 16.4183 7.58172 20 12 20ZM11 15H13V17H11V15ZM11 7H13V13H11V7Z"></path></svg>
+                    La qualification est obligatoire</span>
+            </div>
+
+            <div class="border border-gray-500 border-t-8 border-t-bleu-clair  rounded-lg p-8 mb-4 ">
+                <label for="" class="block mb-2 font-medium text-xl">Contact de l'investisseur</label>
+            </div>
+
+            <div id="bordureIvt4" class="border border-gray-500 rounded-lg p-8 mb-4 ">
+                <label for="email" class="block mb-2 font-medium text-xl">Adresse e-mail<span class="text-red-500">*</span> </label>
+                <input type="email" id="email_invst" name="email" placeholder="Entrez l'adresse e-mail de l'investisseur" class="w-full py-2 border-b-[1px] border-gray-300 focus:outline-none focus:border-b-2 focus:border-blue-500">
+                <span class="error text-red-600 text-sm flex gap-2 mt-4 hidden">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="rgba(228,18,18,1)"><path d="M12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22ZM12 20C16.4183 20 20 16.4183 20 12C20 7.58172 16.4183 4 12 4C7.58172 4 4 7.58172 4 12C4 16.4183 7.58172 20 12 20ZM11 15H13V17H11V15ZM11 7H13V13H11V7Z"></path></svg>
+                    L'adresse mail est obligatoire</span>
+            </div>
+
+            <div id="bordureIvt5" class="border border-gray-500 rounded-lg p-8 mb-4 ">
+                <label for="" class="block mb-2 font-medium text-xl">Numero de téléphone <span class="text-red-500">*</span></label>
+                <input type="number" id="phone" name="telephone" placeholder="Entrez le numero de téléphone" class="w-full py-2 border-b-[1px] border-gray-300 focus:outline-none focus:border-b-2 focus:border-blue-500">
+                <span class="error text-red-600 text-sm flex gap-2 mt-4 hidden">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="rgba(228,18,18,1)"><path d="M12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22ZM12 20C16.4183 20 20 16.4183 20 12C20 7.58172 16.4183 4 12 4C7.58172 4 4 7.58172 4 12C4 16.4183 7.58172 20 12 20ZM11 15H13V17H11V15ZM11 7H13V13H11V7Z"></path></svg>
+                    Le numero de téléphone est obligatoire</span>
+            </div>
+
+            <div class="border border-gray-500 rounded-lg p-8 mb-4 ">
+                <label for="" class="block mb-2 font-medium text-xl">Site web </label>
+                <input type="url" value="https://www" id="" name="site_web" placeholder="Entrez le site web de l'investisseur" class="w-full py-2 border-b-[1px] border-gray-300 focus:outline-none focus:border-b-2 focus:border-blue-500">
+            </div>
+
+            <div class="border border-gray-500 border-t-8 border-t-vert  rounded-lg p-8 mb-4 ">
+                <label for="" class="block mb-2 font-medium text-xl">Addresse de l'investisseur</label>
+            </div>
+
+            <div id="bordureIvt6" class="border border-gray-500 rounded-lg p-8 mb-4 ">
+                <label for="" class="block mb-2 font-medium text-xl">Pays <span class="text-red-500">*</span> </label>
+                <input type="text" id="pays" name="pays" placeholder="Entrez le pays" class="w-full py-2 border-b-[1px] border-gray-300 focus:outline-none focus:border-b-2 focus:border-blue-500">
+                <span class="error text-red-600 text-sm flex gap-2 mt-4 hidden">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="rgba(228,18,18,1)"><path d="M12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22ZM12 20C16.4183 20 20 16.4183 20 12C20 7.58172 16.4183 4 12 4C7.58172 4 4 7.58172 4 12C4 16.4183 7.58172 20 12 20ZM11 15H13V17H11V15ZM11 7H13V13H11V7Z"></path></svg>
+                    Le pays est obligatoire</span>
+            </div>
+
+            <div class="border border-gray-500 rounded-lg p-8 mb-4 ">
+                <label for="" class="block mb-2 font-medium text-xl">Adresse complète  </label>
+                <input type="text" id="" name="adresse_entreprise" placeholder="Entrez l'adresse complète de l'investisseur" class="w-full py-2 border-b-[1px] border-gray-300 focus:outline-none focus:border-b-2 focus:border-blue-500">
+            </div>
+
+            <div class="border border-gray-500 rounded-lg p-8 mb-4 ">
+                <label for="" class="block mb-2 font-medium text-xl">Code postal </label>
+                <input type="number" id="" name="boite_postal" placeholder="Entrez le code postal" class="w-full py-2 border-b-[1px] border-gray-300 focus:outline-none focus:border-b-2 focus:border-blue-500">
+            </div>
+
+            <div class="border border-gray-500 border-t-8 border-t-red-600  rounded-lg p-8 mb-4 ">
+                <label for="color" class="block mb-2 font-medium text-xl">Sélectionner une Couleur <span class="text-gray-500 text-sm">(Optionnel)</span> </label>
+                <input type="color" id="color" name="couleur" value="#ff0000" colorspace="display-p3">
+            </div>
+
+        </div>
+
+    </div>
+
+</form>
+
+{% endblock content %}
