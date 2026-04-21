@@ -12,6 +12,11 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 
 from pathlib import Path
 
+
+import dj_database_url
+import os
+
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -87,22 +92,14 @@ WSGI_APPLICATION = 'suivi_des_investisseurs.wsgi.application'
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'mssql',
-        'NAME': 'suivi_des_investisseur3',
-        'USER': 'OBS-joas\\joas',
-        'PASSWORD': '',
-        'HOST': 'localhost',
-        'PORT': '1433',
-        'OPTIONS': {
-            'driver': 'ODBC Driver 17 for SQL Server',
-            'dsn': 'suivi_des_investisseur',
-            'trusted_connection': 'yes',
-            'encoding': 'utf-8',
-            'unicode_results': True,
-            'extra_params': 'TrustServerCertificate=yes;',
-        },
-    }
+
+    "default": dj_database_url.config(
+        default=os.environ.get(
+            "postgresql://postuser:0EhkAGHtYEfRlE07R7NLyKzKDa22BpBZ@dpg-d7k0d4i8qa3s7397vg0g-a/suivisdesinvestisseurdb"),
+        conn_max_age=600,
+        ssl_require=True,
+    )
+
 }
 
 
